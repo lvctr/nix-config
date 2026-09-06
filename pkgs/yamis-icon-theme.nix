@@ -6,7 +6,7 @@ stdenvNoCC.mkDerivation {
   src = fetchgit {
     url = "https://bitbucket.org/dirn-typo/yet-another-monochrome-icon-set.git";
     rev = "ec97c1a2034634d464bcba4001bc9f77390f1256";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-WW4gRaVmtOv4u7Ru+1JzFeakKA+1QPnkUhoxpN4lnxQ=";
   };
 
   dontBuild = true;

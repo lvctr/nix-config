@@ -5,9 +5,10 @@ stdenvNoCC.mkDerivation {
 
   src = fetchurl {
     url = "https://flutter.googlesource.com/gallery-assets/+archive/refs/heads/master/lib/fonts.tar.gz";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-cvlStwtivGvc+9oHw9/BmfGiNqi4xDqLRsmVYP9Yixw=";
   };
 
+  sourceRoot = ".";
   dontBuild = true;
   installPhase = ''
     runHook preInstall

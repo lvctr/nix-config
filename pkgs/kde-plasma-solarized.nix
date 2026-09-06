@@ -7,7 +7,7 @@ stdenvNoCC.mkDerivation {
     owner = "ret2src";
     repo = "kde-plasma-solarized";
     rev = "4ef14b64a4603ae6c42ecb1ce02aaa330b335cb1";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-sxzRIdBhyOLWL2mOqHI9I8x6y7czbkTHCFOEXQIT6DM=";
   };
 
   dontBuild = true;

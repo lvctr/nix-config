@@ -7,7 +7,7 @@ stdenvNoCC.mkDerivation {
     owner = "lassekongo83";
     repo = "adw-colors";
     rev = "389dff2e6ae48438693473c97f0aac6a2fc019cf";
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    hash = "sha256-WCG662t3EWk6FFJxm4rmz7h/d10il4YUvLKeTBK+Tvs=";
   };
 
   dontBuild = true;

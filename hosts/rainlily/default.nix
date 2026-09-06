@@ -5,7 +5,7 @@
     (import ./disk.nix)
     (import ../../modules/partitions.nix {
       disk = disk.device;
-      swapSize = "40G";
+      swapSize = "68G";
     })
   ];
 

@@ -11,5 +11,12 @@
         position = "0x0",
         scale = 1,
     })
+
+    hl.monitor({
+        output = "HDMI-A-2",
+        mode = "3840x2160@30",
+        position = "0x0",
+        scale = 1,
+    })
   '';
 }

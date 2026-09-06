@@ -55,15 +55,17 @@ If you'd rather run the steps by hand instead of trusting the script, they're:
 1. `export NIX_CONFIG="experimental-features = nix-command flakes"`
 2. `lsblk`, then write `hosts/<hostname>/disk.nix` with the real disk device
 3. `sudo env NIX_CONFIG="$NIX_CONFIG" nix run github:nix-community/disko -- --mode disko --flake path:$PWD#<hostname>`
-4. `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/root`
-   and the same for `/dev/disk/by-partlabel/swap`
-5. `sudo nixos-generate-config --no-filesystems --root /mnt` then copy the
+4. `sudo udevadm settle`
+5. `sudo blkid -t PARTLABEL=root -o device` and `sudo blkid -t PARTLABEL=swap -o device`
+6. `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= <root-device>`
+   and the same for `<swap-device>`
+7. `sudo nixos-generate-config --no-filesystems --root /mnt` then copy the
    result into `hosts/<hostname>/hardware-configuration.nix`
-6. `sudo nixos-install --root /mnt --flake path:$PWD#<hostname>`
-7. Reboot, remove install media. Limine boots, TPM unlocks silently. You
+8. `sudo nixos-install --root /mnt --flake path:$PWD#<hostname>`
+9. Reboot, remove install media. Limine boots, TPM unlocks silently. You
    land at a TTY — no display manager, on purpose. Log in, run
    `start-hyprland` yourself.
-8. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
+10. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
    restic repo/password files (`modules/backup.nix`), Qt colour scheme
    application (`modules/desktop/theme.nix`) — each has the exact
    commands in a comment at its own module.

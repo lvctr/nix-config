@@ -54,12 +54,24 @@ echo "    (you'll be prompted for the root LUKS passphrase, then the swap one)"
 sudo env NIX_CONFIG="$NIX_CONFIG" \
   nix run github:nix-community/disko -- --mode disko --flake "$FLAKE_REF"
 
+sudo udevadm settle
+
+ROOT_LUKS_DEVICE="$(sudo blkid -t PARTLABEL=root -o device | head -n1 || true)"
+SWAP_LUKS_DEVICE="$(sudo blkid -t PARTLABEL=swap -o device | head -n1 || true)"
+
+if [[ -z "$ROOT_LUKS_DEVICE" || -z "$SWAP_LUKS_DEVICE" ]]; then
+  echo "Could not resolve one or both LUKS partition devices after disko." >&2
+  echo "Current block devices:" >&2
+  lsblk -o PATH,PARTLABEL,FSTYPE,MOUNTPOINTS >&2
+  exit 1
+fi
+
 echo
 echo "==> Enrolling TPM2 (no PCR binding) on both LUKS devices"
 echo "    (you'll be asked for the passphrase you just set, once per device,"
 echo "     to authorize the TPM enrollment)"
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/root
-sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/swap
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= "$ROOT_LUKS_DEVICE"
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= "$SWAP_LUKS_DEVICE"
 
 echo
 echo "==> Generating hardware-configuration.nix (filesystems skipped - disko already declared those)"

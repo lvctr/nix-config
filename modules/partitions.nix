@@ -64,6 +64,7 @@
 
   # ---- One-time manual step, after this file has actually run on the ----
   # ---- real machine (partitions must exist first):                    ----
-  #   sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/root
-  #   sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/swap
+  #   sudo udevadm settle
+  #   sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= "$(sudo blkid -t PARTLABEL=root -o device | head -n1)"
+  #   sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= "$(sudo blkid -t PARTLABEL=swap -o device | head -n1)"
 }

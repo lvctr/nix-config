@@ -56,7 +56,8 @@ If you'd rather run the steps by hand instead of trusting the script, they're:
 2. `lsblk`, then write `hosts/<hostname>/disk.nix` with the real disk device
 3. `sudo env NIX_CONFIG="$NIX_CONFIG" nix run github:nix-community/disko -- --mode disko --flake path:$PWD#<hostname>`
 4. `sudo udevadm settle`
-5. `sudo blkid -t PARTLABEL=root -o device` and `sudo blkid -t PARTLABEL=swap -o device`
+5. `sudo blkid -t PARTLABEL=disk-main-root -o device` and `sudo blkid -t PARTLABEL=disk-main-swap -o device`
+   (fall back to `root` / `swap` if you ever rename the partition labels)
 6. `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= <root-device>`
    and the same for `<swap-device>`
 7. `sudo nixos-generate-config --no-filesystems --root /mnt` then copy the

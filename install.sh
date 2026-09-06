@@ -56,8 +56,14 @@ sudo env NIX_CONFIG="$NIX_CONFIG" \
 
 sudo udevadm settle
 
-ROOT_LUKS_DEVICE="$(sudo blkid -t PARTLABEL=root -o device | head -n1 || true)"
-SWAP_LUKS_DEVICE="$(sudo blkid -t PARTLABEL=swap -o device | head -n1 || true)"
+ROOT_LUKS_DEVICE="$({
+  sudo blkid -t PARTLABEL=disk-main-root -o device || true
+  sudo blkid -t PARTLABEL=root -o device || true
+} | head -n1)"
+SWAP_LUKS_DEVICE="$({
+  sudo blkid -t PARTLABEL=disk-main-swap -o device || true
+  sudo blkid -t PARTLABEL=swap -o device || true
+} | head -n1)"
 
 if [[ -z "$ROOT_LUKS_DEVICE" || -z "$SWAP_LUKS_DEVICE" ]]; then
   echo "Could not resolve one or both LUKS partition devices after disko." >&2

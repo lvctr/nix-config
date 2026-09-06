@@ -6,8 +6,8 @@ pcall(dofile, os.getenv("HOME") .. "/.config/hypr/monitors.lua")
 
 local terminal = "kitty"
 local fileManager = "pcmanfm"
-local menu = "pkill rofi || rofi -theme config -show drun"
-local openWindows = "pkill rofi || rofi -theme config -show window"
+local menu = "pkill rofi || rofi -theme solarized -show drun"
+local openWindows = "pkill rofi || rofi -theme solarized -show window"
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE")
@@ -26,7 +26,6 @@ hl.env("GTK_IM_MODULE", "fcitx")
 hl.env("QT_IM_MODULE", "fcitx")
 hl.env("XMODIFIERS", "@im=fcitx")
 hl.env("SDL_IM_MODULE", "fcitx")
-hl.env("XDG_DATA_DIRS", "/usr/local/share:/usr/share")
 
 hl.config({
     general = {

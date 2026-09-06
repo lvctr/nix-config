@@ -23,7 +23,6 @@ in
     "hypr/hyprpaper.conf" = mkConfigSource (hyprConfigDir + /hyprpaper.conf);
     "hypr/xdph.conf" = mkConfigSource (hyprConfigDir + /xdph.conf);
 
-    "rofi/config.rasi" = mkConfigSource ./config/rofi/config.rasi;
     "dunst/dunstrc" = mkConfigSource ./config/dunst/dunstrc;
     "rofi/dunst.rasi" = mkConfigSource ./config/rofi/dunst.rasi;
 
@@ -39,6 +38,12 @@ in
   services.hypridle.enable = true;
   services.dunst.enable = true;
   programs.hyprlock.enable = true;
+
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi;
+    theme = ./config/rofi/solarized.rasi;
+  };
 
   programs.waybar = {
     enable = true;

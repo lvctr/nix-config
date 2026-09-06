@@ -10,6 +10,9 @@
       # zinit light zsh-users/zsh-syntax-highlighting
     '';
   };
-  
-  xdg.configFile."kitty/kitty.conf".source = ./config/kitty/kitty.conf;
+
+  xdg.configFile."kitty" = {
+    source = ./config/kitty;
+    recursive = true;
+  };
 }

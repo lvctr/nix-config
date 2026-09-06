@@ -1,10 +1,7 @@
-{ pkgs, ... }:
+{ ... }:
 {
   imports = [
-    ./common/session.nix
-    ./common/development.nix
-    ./common/theme.nix
-    ./common/user.nix
+    ./default.nix
   ];
 
   xdg.configFile."hypr/monitors.lua".text = ''
@@ -15,6 +12,4 @@
         scale = 1,
     })
   '';
-
-  home.stateVersion = "24.11";
 }

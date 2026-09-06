@@ -1,10 +1,7 @@
-{ pkgs, ... }:
+{ ... }:
 {
   imports = [
-    ./common/session.nix
-    ./common/development.nix
-    ./common/theme.nix
-    ./common/user.nix
+    ./default.nix
   ];
 
   # Monitor layout is hardware, stays out of common/config/hypr/hyprland.lua - append
@@ -25,6 +22,4 @@
         scale = 1,
     })
   '';
-
-  home.stateVersion = "24.11";
 }

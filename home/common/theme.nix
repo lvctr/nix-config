@@ -1,29 +1,43 @@
 { pkgs, ... }:
 {
   # ---- GTK ----
-  xdg.configFile."gtk-3.0/settings.ini".text = ''
-    [Settings]
-    gtk-theme-name=adw-gtk3-dark
-    gtk-icon-theme-name=yet-another-monochrome-icon-set
-    gtk-cursor-theme-name=Simp1e-Solarized-Dark
-    gtk-application-prefer-dark-theme=1
-  '';
-  xdg.configFile."gtk-4.0/settings.ini".text = ''
-    [Settings]
-    gtk-theme-name=adw-gtk3-dark
-    gtk-icon-theme-name=yet-another-monochrome-icon-set
-    gtk-cursor-theme-name=Simp1e-Solarized-Dark
-    gtk-application-prefer-dark-theme=1
-  '';
+  gtk = {
+    enable = true;
 
-  xdg.configFile."gtk-3.0/gtk.css".text = ''
-    @import url("${pkgs.adw-colors}/share/adw-colors/themes/adw-solarized/gtk3-dark.css");
-    * { font-family: "Source Han Code JP"; font-size: 12px; }
-  '';
-  xdg.configFile."gtk-4.0/gtk.css".text = ''
-    @import url("${pkgs.adw-colors}/share/adw-colors/themes/adw-solarized/gtk4-dark.css");
-    * { font-family: "Source Han Code JP"; font-size: 12px; }
-  '';
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+
+    iconTheme = {
+      name = "yet-another-monochrome-icon-set";
+      package = pkgs.yamis-icon-theme;
+    };
+
+    cursorTheme = {
+      name = "Simp1e-Solarized-Dark";
+      package = pkgs.xcursor-simp1e-solarized-dark;
+      size = 24;
+    };
+
+    font = {
+      name = "Source Han Code JP";
+      size = 12;
+    };
+
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+
+    gtk3.extraCss = ''
+      @import url("${pkgs.adw-colors}/share/adw-colors/themes/adw-solarized/gtk3-dark.css");
+    '';
+
+    gtk4.extraCss = ''
+      @import url("${pkgs.adw-colors}/share/adw-colors/themes/adw-solarized/gtk4-dark.css");
+    '';
+  };
+
+  home.sessionVariables.GTK_THEME = "adw-gtk3-dark";
 
   # ---- Qt / KDE ----
   xdg.dataFile."color-schemes/BreezeSolarizedDark.colors".source =

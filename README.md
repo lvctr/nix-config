@@ -91,7 +91,6 @@ cd /tmp/nix-config
 
 The installer handles the following flow automatically:
 
-```
 1. Ask for the target disk.
 2. Write `hosts/<hostname>/disk.nix`.
 3. Run `disko`.
@@ -100,16 +99,13 @@ The installer handles the following flow automatically:
 6. Generate `hardware-configuration.nix`.
 7. Run `nixos-install`.
 8. Prompt for the configured user password inside `/mnt`.
-```
 
 And it will deliberately ask for the following secrets interactively:
 
-```
 - the target disk device
 - the swap and root LUKS passphrase
 - the passphrase re-entry needed for TPM enrollment
 - the root and user account password after install
-```
 
 This repo uses `path:$PWD#<hostname>` during install so generated local files like `hosts/<hostname>/disk.nix` are visible to flake evaluation.
 

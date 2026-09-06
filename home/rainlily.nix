@@ -9,6 +9,7 @@
     ./common/kitty.nix
     ./common/shell.nix
     ./common/theme.nix
+    ./common/xdg.nix
     (import ./common/waybar.nix { outputs = [ "DP-1" ]; }) # bar only on primary monitor - adjust to your real connector name
   ];
 

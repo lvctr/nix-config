@@ -9,6 +9,7 @@
     ./common/kitty.nix
     ./common/shell.nix
     ./common/theme.nix
+    ./common/xdg.nix
     (import ./common/waybar.nix { outputs = null; })
   ];
 

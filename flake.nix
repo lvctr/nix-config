@@ -41,7 +41,7 @@
             ./modules/backup.nix
             ./modules/desktop/hyprland.nix
             ./modules/desktop/audio.nix
-            ./modules/desktop/theming.nix
+            ./modules/desktop/theme.nix
             ./modules/desktop/keyring.nix
             ./modules/desktop/apps.nix
             ./modules/desktop/gaming.nix

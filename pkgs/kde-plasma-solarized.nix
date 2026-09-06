@@ -1,22 +1,24 @@
 { stdenvNoCC, fetchFromGitHub }:
 stdenvNoCC.mkDerivation {
   pname = "kde-plasma-solarized";
-  version = "unstable-2026";
+  version = "unstable-2023-01-26";
 
   src = fetchFromGitHub {
     owner = "ret2src";
     repo = "kde-plasma-solarized";
-    rev = "main";
-    # Placeholder - `nix build` will fail on this and print the correct
-    # hash to paste in. Same for every other lib.fakeHash below.
+    rev = "4ef14b64a4603ae6c42ecb1ce02aaa330b335cb1";
     hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   };
 
   dontBuild = true;
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/share/color-schemes
-    cp *.colors $out/share/color-schemes/
+    cp BreezeSolarizedDark.colors $out/share/color-schemes/
+
+    runHook postInstall
   '';
 
-  meta.description = "Solarized Dark/Light KDE Plasma colour schemes, used here to theme Qt via plasma-integration";
+  meta.description = "Solarized Dark color scheme for KDE Plasma";
 }

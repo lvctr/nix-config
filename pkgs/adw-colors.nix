@@ -1,20 +1,25 @@
 { stdenvNoCC, fetchFromGitHub }:
 stdenvNoCC.mkDerivation {
   pname = "adw-colors";
-  version = "unstable-2026";
+  version = "unstable-2026-03-06";
 
   src = fetchFromGitHub {
     owner = "lassekongo83";
     repo = "adw-colors";
-    rev = "main";
+    rev = "389dff2e6ae48438693473c97f0aac6a2fc019cf";
     hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   };
 
   dontBuild = true;
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/share/adw-colors
-    cp -r themes $out/share/adw-colors/
+    mkdir -p $out/share/adw-colors/themes
+    cp -r themes/adw-solarized $out/share/adw-colors/themes/
+
+    runHook postInstall
   '';
 
-  meta.description = "adw-colors theme collection - modules/desktop/theming.nix references themes/adw-solarized/*.css from this";
+  meta.description = "Solarized theme from adw-colors";
 }

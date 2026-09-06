@@ -1,28 +1,56 @@
-{ fetchFromGitLab, stdenvNoCC }:
-# The upstream xcursor-simp1e AUR PKGBUILD splits many variants out of one
-# gitlab.com/cursors/simp1e source tree. Point this at the exact variant
-# you want and adjust the installPhase to match the built cursor theme's
-# actual directory name once you've inspected a fetched checkout - AUR's
-# PKGBUILD is the authoritative reference for the build steps.
+{
+  fetchFromGitLab,
+  librsvg,
+  python3,
+  stdenvNoCC,
+  xorg,
+}:
 stdenvNoCC.mkDerivation {
   pname = "xcursor-simp1e-solarized-dark";
-  version = "unstable-2026";
+  version = "20250223";
 
   src = fetchFromGitLab {
     owner = "cursors";
     repo = "simp1e";
-    rev = "main";
+    rev = "20250223";
     hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   };
 
-  # PLACEHOLDER: the real AUR PKGBUILD builds this from source (it's not a
-  # pure copy job like the icon theme/color scheme). Check
-  # https://aur.archlinux.org/packages/xcursor-simp1e-solarized-dark for the
-  # exact build() steps before relying on this derivation.
-  installPhase = ''
-    mkdir -p $out/share/icons/Simp1e-Solarized-Dark
-    echo "TODO: fill in real build steps from the AUR PKGBUILD" > $out/share/icons/Simp1e-Solarized-Dark/README
+  cursorGenerator = fetchFromGitLab {
+    owner = "cursors";
+    repo = "cursor-generator";
+    rev = "master";
+    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  };
+
+  nativeBuildInputs = [
+    librsvg
+    (python3.withPackages (pythonPackages: [ pythonPackages.pillow ]))
+    xorg.xcursorgen
+  ];
+
+  postPatch = ''
+    rm -rf cursor-generator
+    cp -R $cursorGenerator cursor-generator
+    chmod -R u+w cursor-generator
   '';
 
-  meta.description = "Simp1e cursor theme, Solarized Dark variant";
+  buildPhase = ''
+    runHook preBuild
+
+    ./build.sh
+
+    runHook postBuild
+  '';
+
+  installPhase = ''
+    runHook preInstall
+
+    install -dm755 $out/share/icons
+    cp -a built_themes/Simp1e-Solarized-Dark $out/share/icons/
+
+    runHook postInstall
+  '';
+
+  meta.description = "An aesthetic cursor theme, Solarized Dark variant";
 }

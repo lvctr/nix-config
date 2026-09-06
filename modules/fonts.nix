@@ -40,6 +40,6 @@
   };
 
   # UI font at a literal 12px (not 12pt) for GTK and Qt - see
-  # modules/desktop/theming.nix for where this is actually applied
+  # modules/desktop/theme.nix for where this is actually applied
   # (gtk.css font-size rule + kdeglobals pixel-size font field).
 }

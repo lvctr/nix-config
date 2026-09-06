@@ -25,14 +25,12 @@ NixOS/Nix environment this was not written from.
 - `system.stateVersion` / `home.stateVersion` — set to whatever NixOS release you actually install with, then never change it afterward
 
 **Placeholder package hashes** (every `pkgs/*.nix` file, and `home/common/shell.nix`'s zinit fetch):
-Each has a fake `sha256-AAAA...` hash. Run the build once; Nix will refuse and print the real hash in its error message — paste that in. This is the normal Nix workflow for a new `fetchFromGitHub`/`fetchFromGitLab` call, not a mistake to fix by hand.
+Each has a fake `sha256-AAAA...` hash. Run the build once; Nix will refuse and print the real hash in its error message — paste that in. This is the normal Nix workflow for a new fixed-output fetch, not a mistake to fix by hand. For Google Sans specifically, `scripts/update-ttf-google-sans-hash.sh` prefetches the upstream tarball and patches `pkgs/ttf-google-sans.nix` automatically.
 
 **Genuinely unverified content, flagged in-file:**
-- `pkgs/xcursor-simp1e-solarized-dark.nix` and `pkgs/ttf-google-sans.nix` — need their real build steps copied from the actual AUR PKGBUILDs, not just a source fetch
-- `modules/desktop/theming.nix` — the `kdePackages.*` paths for plasma-integration/breeze/kde-cli-tools should be checked against your actual nixpkgs revision (this has moved around across KDE 5→6)
+- `modules/desktop/theme.nix` — the `kdePackages.*` paths for plasma-integration/breeze/kde-cli-tools should be checked against your actual nixpkgs revision (this has moved around across KDE 5→6)
 - `modules/fonts.nix` — several font package names are best-guesses, verify each with `nix search nixpkgs <name>`
 - `modules/desktop/audio.nix` — check whether `pavoldcontrol` exists in nixpkgs, or whether nixpkgs' own `pavucontrol` is still pre-6.0/GTK3 (in which case you don't need a replacement at all)
-- `home/common/gtk-theming.nix` — verify the exact filenames inside adw-colors' `adw-solarized` theme folder
 
 ## Bootstrap, per host
 
@@ -67,7 +65,7 @@ If you'd rather run the steps by hand instead of trusting the script, they're:
    `start-hyprland` yourself.
 8. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
    restic repo/password files (`modules/backup.nix`), Qt colour scheme
-   application (`modules/desktop/theming.nix`) — each has the exact
+   application (`modules/desktop/theme.nix`) — each has the exact
    commands in a comment at its own module.
 
 Repeat for each of the three hostnames.

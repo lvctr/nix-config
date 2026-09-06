@@ -60,6 +60,7 @@
   boot.initrd.systemd.enable = true;
   boot.initrd.luks.devices."cryptroot".crypttabExtraOpts = [ "tpm2-device=auto" ];
   boot.initrd.luks.devices."cryptswap".crypttabExtraOpts = [ "tpm2-device=auto" ];
+  boot.resumeDevice = "/dev/mapper/cryptswap";
 
   # ---- One-time manual step, after this file has actually run on the ----
   # ---- real machine (partitions must exist first):                    ----

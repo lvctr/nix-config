@@ -7,7 +7,7 @@
     ./common/dunst.nix
     ./common/rofi.nix
     ./common/shell.nix
-    ./common/gtk-theming.nix
+    ./common/theme.nix
     (import ./common/waybar.nix { outputs = null; })
   ];
 

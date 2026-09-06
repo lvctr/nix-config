@@ -40,13 +40,6 @@ in
   services.dunst.enable = true;
   programs.hyprlock.enable = true;
 
-  # Mainline rofi (not the old rofi-wayland fork) - Wayland support was
-  # merged upstream in 2025, this is the correct package now.
-  programs.rofi = {
-    enable = true;
-    package = pkgs.rofi;
-  };
-
   programs.waybar = {
     enable = true;
   };

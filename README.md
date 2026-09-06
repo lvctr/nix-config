@@ -72,7 +72,7 @@ I use [Solarized](https://ethanschoonover.com/solarized/) for everything.
 ### Others
 
 - `tlp` on `riverlily` and `waterlily` for laptop power management
-- `restic` for backups with hooks defined in `modules/backup.nix`
+- `restic` for backups with hooks defined in `modules/services/backup.nix`
 - `openrgb` and `i2c-tools` support for RGB control
 
 ## Installation
@@ -140,7 +140,11 @@ sudo chmod 600 /etc/restic/repository /etc/restic/password
 The repo is split roughly like this:
 
 - `hosts/` for per-machine hardware facts and swap sizing
-- `modules/` for shared NixOS modules
+- `modules/core/` for shared system baselines like boot, locale, users, shell, and utilities
+- `modules/desktop/` for shared desktop, theme, fonts, apps, audio, and gaming
+- `modules/security/` for hardening
+- `modules/services/` for service modules like backups
+- `modules/storage/` for disk layout and LUKS/TPM wiring
 - `home/` for Home Manager config
 - `home/common/config/` for dotfiles
 - `pkgs/` for custom packaged assets

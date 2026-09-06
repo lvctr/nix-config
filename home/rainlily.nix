@@ -1,18 +1,29 @@
 { pkgs, ... }:
 {
   imports = [
-    (import ./common/desktop.nix { outputs = [ "DP-1" ]; })
+    ./common/session.nix
     ./common/development.nix
     ./common/theme.nix
     ./common/user.nix
   ];
 
-  # Monitor layout is hardware, stays out of common/config/hypr/hyprland.conf - append
+  # Monitor layout is hardware, stays out of common/config/hypr/hyprland.lua - append
   # it here instead. Adjust connector names/resolutions to your actual
   # rainlily setup (check with `hyprctl monitors` once booted).
-  xdg.configFile."hypr/monitors.conf".text = ''
-    monitor = DP-1, 2560x1440@144, 0x0, 1
-    monitor = DP-2, 1920x1080@60, 2560x0, 1
+  xdg.configFile."hypr/monitors.lua".text = ''
+    hl.monitor({
+        output = "DP-1",
+        mode = "2560x1440@144",
+        position = "0x0",
+        scale = 1,
+    })
+
+    hl.monitor({
+        output = "DP-2",
+        mode = "1920x1080@60",
+        position = "2560x0",
+        scale = 1,
+    })
   '';
 
   home.stateVersion = "24.11";

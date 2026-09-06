@@ -114,7 +114,7 @@ Next:
   3. After first login, the one-time setup steps that only make sense on
      a running system - each has the exact commands in a comment at its
      own module:
-       - modules/hardening.nix       (fscrypt setup + encrypt /home/<user>)
-       - modules/backup.nix        (restic repository/password files)
-       - modules/desktop/theming.nix (Qt colour scheme application)
+      - modules/security/hardening.nix  (fscrypt setup + encrypt /home/<user>)
+      - modules/services/backup.nix     (restic repository/password files)
+      - modules/desktop/theme.nix       (Qt colour scheme application)
 EOF

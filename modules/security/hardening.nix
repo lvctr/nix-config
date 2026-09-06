@@ -13,7 +13,7 @@
 
   # ---- One-time manual setup, per host, after first boot ----
   # ext4 needs the `encrypt` feature flag at mkfs time for this to work at
-  # all - modules/partitions.nix sets `extraArgs = [ "-O" "encrypt" ];` on
+  # all - modules/storage/partitions.nix sets `extraArgs = [ "-O" "encrypt" ];` on
   # the root filesystem for exactly this reason. If that flag is missing,
   # `fscrypt encrypt` will fail outright.
   #

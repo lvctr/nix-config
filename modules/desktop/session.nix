@@ -18,6 +18,11 @@
     dunst
     hyprlock
     hypridle
+    hyprpicker
+    brightnessctl
+    playerctl
+    grim
+    slurp
     wl-clipboard
   ];
 }

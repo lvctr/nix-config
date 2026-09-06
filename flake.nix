@@ -30,21 +30,22 @@
 
             # Shared modules. Nothing hardware-specific is allowed to live
             # in any of these - see hosts/<name>/ for that.
-            ./modules/boot.nix
-            ./modules/system.nix
-            ./modules/locale.nix
-            ./modules/networking.nix
-            ./modules/users.nix
-            ./modules/shell.nix
-            ./modules/fonts.nix
-            ./modules/hardening.nix
-            ./modules/backup.nix
-            ./modules/desktop/desktop.nix
+            ./modules/core/boot.nix
+            ./modules/core/system.nix
+            ./modules/core/locale.nix
+            ./modules/core/networking.nix
+            ./modules/core/users.nix
+            ./modules/core/shell.nix
+            ./modules/core/utils.nix
+            ./modules/desktop/session.nix
             ./modules/desktop/audio.nix
+            ./modules/desktop/fonts.nix
             ./modules/desktop/theme.nix
             ./modules/desktop/keyring.nix
             ./modules/desktop/apps.nix
             ./modules/desktop/gaming.nix
+            ./modules/security/hardening.nix
+            ./modules/services/backup.nix
 
             # This host's own hardware facts: disk layout, LUKS/TPM2 wiring,
             # CPU/GPU packages, hostname, timezone.

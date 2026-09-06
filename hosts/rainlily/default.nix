@@ -3,7 +3,7 @@
   imports = [
     ./hardware-configuration.nix
     (import ./disk.nix)
-    (import ../../modules/partitions.nix {
+    (import ../../modules/storage/partitions.nix {
       disk = disk.device;
       swapSize = "68G";
     })

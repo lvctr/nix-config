@@ -1,19 +1,13 @@
 { pkgs, ... }:
 {
   imports = [
-    ./common/hyprland.nix
-    ./common/hypridle.nix
-    ./common/hyprlock.nix
-    ./common/dunst.nix
-    ./common/rofi.nix
-    ./common/kitty.nix
-    ./common/shell.nix
+    (import ./common/desktop.nix { outputs = [ "DP-1" ]; })
+    ./common/development.nix
     ./common/theme.nix
-    ./common/xdg.nix
-    (import ./common/waybar.nix { outputs = [ "DP-1" ]; }) # bar only on primary monitor - adjust to your real connector name
+    ./common/user.nix
   ];
 
-  # Monitor layout is hardware, stays out of common/hyprland.conf - append
+  # Monitor layout is hardware, stays out of common/config/hypr/hyprland.conf - append
   # it here instead. Adjust connector names/resolutions to your actual
   # rainlily setup (check with `hyprctl monitors` once booted).
   xdg.configFile."hypr/monitors.conf".text = ''

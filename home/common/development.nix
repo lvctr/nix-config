@@ -1,5 +1,4 @@
-{ pkgs, config, ... }:
-
+{ pkgs, ... }:
 {
   programs.zsh = {
     enable = true;
@@ -11,4 +10,6 @@
       # zinit light zsh-users/zsh-syntax-highlighting
     '';
   };
+  
+  xdg.configFile."kitty/kitty.conf".source = ./config/kitty/kitty.conf;
 }

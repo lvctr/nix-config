@@ -1,16 +1,10 @@
 { pkgs, ... }:
 {
   imports = [
-    ./common/hyprland.nix
-    ./common/hypridle.nix
-    ./common/hyprlock.nix
-    ./common/dunst.nix
-    ./common/rofi.nix
-    ./common/kitty.nix
-    ./common/shell.nix
+    (import ./common/desktop.nix { outputs = null; })
+    ./common/development.nix
     ./common/theme.nix
-    ./common/xdg.nix
-    (import ./common/waybar.nix { outputs = null; })
+    ./common/user.nix
   ];
 
   xdg.configFile."hypr/monitors.conf".text = ''

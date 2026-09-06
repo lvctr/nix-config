@@ -1,8 +1,0 @@
-* {
-    background:   #002b36;
-    foreground:   #839496;
-    selected:     #268bd2;
-    active:       #859900;
-    urgent:       #dc322f;
-    font: "Source Han Code JP 12";
-}

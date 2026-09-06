@@ -43,8 +43,9 @@ git clone <this-repo-url> /tmp/nix-config && cd /tmp/nix-config
 `install.sh` runs the disko → TPM enrollment → hardware-configuration.nix
 generation → `nixos-install` sequence for you. It deliberately still stops
 for input at: the target disk device, the swap LUKS passphrase, the root
-LUKS passphrase, and the one-time passphrase re-entry each TPM enrollment
-needs to authorize itself. The script prints which resolved device is root
+LUKS passphrase, the one-time passphrase re-entry each TPM enrollment
+needs to authorize itself, and the configured user account password after
+`nixos-install` succeeds. The script prints which resolved device is root
 and which is swap before TPM enrollment. The chosen disk is written to an untracked
 `hosts/<hostname>/disk.nix`; the secrets still never belong in a
 script argument or a file. It prints the
@@ -67,7 +68,8 @@ If you'd rather run the steps by hand instead of trusting the script, they're:
 9. Reboot, remove install media. Limine boots, TPM unlocks silently. You
    land at a TTY — no display manager, on purpose. Log in, run
    `start-hyprland` yourself.
-10. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
+10. The script then runs `passwd` for the configured user inside `/mnt`.
+11. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
    restic repo/password files (`modules/backup.nix`), Qt colour scheme
    application (`modules/desktop/theme.nix`) — each has the exact
    commands in a comment at its own module.

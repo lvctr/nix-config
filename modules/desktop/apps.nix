@@ -15,6 +15,7 @@
     engrampa
 
     # Other
+    kitty
     fastfetch
     networkmanagerapplet
     openrgb

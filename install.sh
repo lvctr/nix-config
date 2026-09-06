@@ -30,6 +30,14 @@ fi
 
 export NIX_CONFIG="experimental-features = nix-command flakes"
 FLAKE_REF="path:$PWD#$HOSTNAME"
+INSTALL_USERNAME="$(nix eval --extra-experimental-features 'nix-command flakes' --impure --raw --expr '
+  let
+    flake = builtins.getFlake (toString ./.);
+    users = builtins.attrNames flake.nixosConfigurations."'"$HOSTNAME"'".config.home-manager.users;
+  in
+    if builtins.length users == 1 then builtins.head users else
+      builtins.throw "expected exactly one Home Manager user"
+')"
 
 echo "==> Available block devices"
 lsblk
@@ -91,17 +99,19 @@ echo
 echo "==> Installing NixOS for #$HOSTNAME"
 sudo nixos-install --root /mnt --flake "$FLAKE_REF"
 
+echo
+echo "==> Setting password for $INSTALL_USERNAME"
+sudo nixos-enter --root /mnt -c "passwd $INSTALL_USERNAME"
+
 cat <<EOF
 
 ==> Install complete.
 
 Next:
-  1. Set the user account password if nixos-install didn't prompt you for
-     one already: sudo nixos-enter --root /mnt -c 'passwd <username>'
-  2. Reboot and remove the install media.
-  3. Limine boots, TPM unlocks both devices silently. You land at a TTY -
+  1. Reboot and remove the install media.
+  2. Limine boots, TPM unlocks both devices silently. You land at a TTY -
      no display manager, by design. Log in, then run: start-hyprland
-  4. After first login, the one-time setup steps that only make sense on
+  3. After first login, the one-time setup steps that only make sense on
      a running system - each has the exact commands in a comment at its
      own module:
        - modules/hardening.nix       (fscrypt setup + encrypt /home/<user>)

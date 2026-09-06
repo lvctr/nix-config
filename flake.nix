@@ -39,7 +39,7 @@
             ./modules/fonts.nix
             ./modules/hardening.nix
             ./modules/backup.nix
-            ./modules/desktop/hyprland.nix
+            ./modules/desktop/desktop.nix
             ./modules/desktop/audio.nix
             ./modules/desktop/theme.nix
             ./modules/desktop/keyring.nix

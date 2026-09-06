@@ -42,9 +42,10 @@ git clone <this-repo-url> /tmp/nix-config && cd /tmp/nix-config
 
 `install.sh` runs the disko → TPM enrollment → hardware-configuration.nix
 generation → `nixos-install` sequence for you. It deliberately still stops
-for input at: the target disk device, the root LUKS passphrase, the swap
+for input at: the target disk device, the swap LUKS passphrase, the root
 LUKS passphrase, and the one-time passphrase re-entry each TPM enrollment
-needs to authorize itself. The chosen disk is written to an untracked
+needs to authorize itself. The script prints which resolved device is root
+and which is swap before TPM enrollment. The chosen disk is written to an untracked
 `hosts/<hostname>/disk.nix`; the secrets still never belong in a
 script argument or a file. It prints the
 remaining one-time post-install steps (user password, fscrypt, restic,

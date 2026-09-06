@@ -50,7 +50,7 @@ cat > "hosts/$HOSTNAME/disk.nix" <<EOF
 EOF
 
 echo "==> Partitioning + formatting $DISKO_DEVICE for $HOSTNAME"
-echo "    (you'll be prompted for the root LUKS passphrase, then the swap one)"
+echo "    (you'll be prompted for the swap LUKS passphrase first, then the root one)"
 sudo env NIX_CONFIG="$NIX_CONFIG" \
   nix run github:nix-community/disko -- --mode disko --flake "$FLAKE_REF"
 
@@ -76,6 +76,9 @@ echo
 echo "==> Enrolling TPM2 (no PCR binding) on both LUKS devices"
 echo "    (you'll be asked for the passphrase you just set, once per device,"
 echo "     to authorize the TPM enrollment)"
+echo "    root: $ROOT_LUKS_DEVICE"
+echo "    swap: $SWAP_LUKS_DEVICE"
+echo "    enrolling root first, then swap"
 sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= "$ROOT_LUKS_DEVICE"
 sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= "$SWAP_LUKS_DEVICE"
 

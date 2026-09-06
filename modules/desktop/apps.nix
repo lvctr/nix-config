@@ -16,6 +16,7 @@
 
     # Other
     kitty
+    git
     fastfetch
     networkmanagerapplet
     openrgb

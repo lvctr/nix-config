@@ -9,6 +9,7 @@
   environment.systemPackages = with pkgs; [
     adw-gtk3
     yamis-icon-theme
+    papirus-icon-theme
     xcursor-simp1e-solarized-dark
     adw-colors
 

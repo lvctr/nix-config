@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+#
+# Run this FROM THE MINIMAL NIXOS ISO, from inside a clone of this repo.
+#
+#   ./install.sh rainlily
+#   ./install.sh riverlily
+#   ./install.sh waterlily
+#
+# What this does NOT automate, on purpose:
+#   - The root and swap LUKS passphrases (typed interactively, twice, when
+#     disko runs) - these are secrets and never touch a script argument
+#     or a file.
+#   - TPM2 enrollment's own passphrase prompt (systemd-cryptenroll needs
+#     you to type the passphrase you just set, once per device, to
+#     authorize adding the TPM keyslot).
+#   - The user account password and the restic/fscrypt one-time setup
+#     that only makes sense once you've actually logged in - see the
+#     printed instructions at the end.
+set -euo pipefail
+
+HOSTNAME="${1:-}"
+if [[ -z "$HOSTNAME" ]]; then
+  echo "Usage: $0 <rainlily|riverlily|waterlily>" >&2
+  exit 1
+fi
+if [[ ! -d "hosts/$HOSTNAME" ]]; then
+  echo "No hosts/$HOSTNAME directory here - run this from the repo root." >&2
+  exit 1
+fi
+
+export NIX_CONFIG="experimental-features = nix-command flakes"
+
+echo "==> Partitioning + formatting $HOSTNAME per hosts/$HOSTNAME/disko.nix"
+echo "    (you'll be prompted for the root LUKS passphrase, then the swap one)"
+# NOTE: hosts/$HOSTNAME/disko.nix now evaluates to modules/partitions.nix's
+# full output, which includes boot.initrd.luks.devices.*.crypttabExtraOpts
+# alongside disko.devices (merged deliberately - see partitions.nix's own
+# comment for why). This is UNVERIFIED against a real disko CLI run: it's
+# possible the standalone `disko --mode disko <file>` invocation below only
+# understands `disko.devices` and errors or silently ignores the
+# boot.initrd.* options sitting alongside it in the same file, since those
+# are ordinarily only meaningful inside a full NixOS module evaluation. If
+# this step fails or behaves oddly, check disko's current docs for
+# invoking it directly against a flake output (e.g. some disko versions
+# support `--flake .#hostname` instead of a raw file path) - that would
+# evaluate the complete system, where boot.initrd.luks.devices is a real,
+# defined option no matter what.
+sudo nix run github:nix-community/disko -- --mode disko "hosts/$HOSTNAME/disko.nix"
+
+echo
+echo "==> Enrolling TPM2 (no PCR binding) on both LUKS devices"
+echo "    (you'll be asked for the passphrase you just set, once per device,"
+echo "     to authorize the TPM enrollment)"
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/root
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/swap
+
+echo
+echo "==> Generating hardware-configuration.nix (filesystems skipped - disko already declared those)"
+sudo nixos-generate-config --no-filesystems --root /mnt
+cp /mnt/etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware-configuration.nix"
+
+echo
+echo "==> Installing NixOS for #$HOSTNAME"
+sudo nixos-install --root /mnt --flake ".#$HOSTNAME"
+
+cat <<EOF
+
+==> Install complete.
+
+Next:
+  1. Set the user account password if nixos-install didn't prompt you for
+     one already: sudo nixos-enter --root /mnt -c 'passwd <username>'
+  2. Reboot and remove the install media.
+  3. Limine boots, TPM unlocks both devices silently. You land at a TTY -
+     no display manager, by design. Log in, then run: start-hyprland
+  4. After first login, the one-time setup steps that only make sense on
+     a running system - each has the exact commands in a comment at its
+     own module:
+       - modules/hardening.nix       (fscrypt setup + encrypt /home/<user>)
+       - modules/backup.nix        (restic repository/password files)
+       - modules/desktop/theming.nix (Qt colour scheme application)
+EOF

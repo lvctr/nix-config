@@ -1,25 +1,36 @@
-{ config, lib, pkgs, ... }:
+{ config, disk, lib, pkgs, ... }:
 {
   imports = [
-    ./disko.nix
     ./hardware-configuration.nix
-    # nixos-hardware's lenovo-thinkpad-t480s module is imported at the
-    # flake.nix level.
+    (import ./disk.nix)
+    (import ../../modules/partitions.nix {
+      disk = disk.device;
+      swapSize = "16G";
+    })
   ];
 
   networking.hostName = "waterlily";
-  time.timeZone = "REPLACE-ME";
-  i18n.defaultLocale = "en_US.UTF-8";
 
-  system.stateVersion = "24.11";
+  # CPU
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  services.throttled.enable = lib.mkDefault true;
 
-  # ---- GPU: 8th-gen Kaby Lake R, UHD 620 ----
-  # Deliberately NOT importing vpl-gpu-rt or setting ANV_DEBUG here - those
-  # target the newer Xe Vulkan-video pipeline and do nothing on this much
-  # older iGPU generation. intel-media-driver still applies broadly.
+  # GPU
+  boot.initrd.kernelModules = [ "i915" ];
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
-  services.power-profiles-daemon.enable = true;
-  powerManagement.enable = true;
+  # SSD
+  services.fstrim.enable = lib.mkDefault true;
+
+  # Input
+  hardware.trackpoint.enable = lib.mkDefault true;
+  hardware.trackpoint.emulateWheel = lib.mkDefault config.hardware.trackpoint.enable;
+
+  # Biometrics
+  services.fprintd.enable = true;
+
+  # Power
+  services.tlp.enable = true;
+  environment.systemPackages = with pkgs; [ tlpui ];
 }

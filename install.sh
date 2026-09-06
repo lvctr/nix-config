@@ -30,22 +30,28 @@ fi
 
 export NIX_CONFIG="experimental-features = nix-command flakes"
 
-echo "==> Partitioning + formatting $HOSTNAME per hosts/$HOSTNAME/disko.nix"
+echo "==> Available block devices"
+lsblk
+echo
+read -r -p "Disk device to erase for $HOSTNAME (for example, /dev/nvme0n1): " DISKO_DEVICE
+if [[ ! -b "$DISKO_DEVICE" ]]; then
+  echo "Not a block device: $DISKO_DEVICE" >&2
+  exit 1
+fi
+
+cat > "hosts/$HOSTNAME/disk.nix" <<EOF
+{ ... }:
+{
+  _module.args.disk = {
+    device = "$DISKO_DEVICE";
+  };
+}
+EOF
+
+echo "==> Partitioning + formatting $DISKO_DEVICE for $HOSTNAME"
 echo "    (you'll be prompted for the root LUKS passphrase, then the swap one)"
-# NOTE: hosts/$HOSTNAME/disko.nix now evaluates to modules/partitions.nix's
-# full output, which includes boot.initrd.luks.devices.*.crypttabExtraOpts
-# alongside disko.devices (merged deliberately - see partitions.nix's own
-# comment for why). This is UNVERIFIED against a real disko CLI run: it's
-# possible the standalone `disko --mode disko <file>` invocation below only
-# understands `disko.devices` and errors or silently ignores the
-# boot.initrd.* options sitting alongside it in the same file, since those
-# are ordinarily only meaningful inside a full NixOS module evaluation. If
-# this step fails or behaves oddly, check disko's current docs for
-# invoking it directly against a flake output (e.g. some disko versions
-# support `--flake .#hostname` instead of a raw file path) - that would
-# evaluate the complete system, where boot.initrd.luks.devices is a real,
-# defined option no matter what.
-sudo nix run github:nix-community/disko -- --mode disko "hosts/$HOSTNAME/disko.nix"
+sudo env NIX_CONFIG="$NIX_CONFIG" \
+  nix run github:nix-community/disko -- --mode disko --flake ".#$HOSTNAME"
 
 echo
 echo "==> Enrolling TPM2 (no PCR binding) on both LUKS devices"

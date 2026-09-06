@@ -1,32 +1,47 @@
-{ config, lib, pkgs, ... }:
+{ config, disk, lib, pkgs, ... }:
 {
   imports = [
-    ./disko.nix
     ./hardware-configuration.nix
-    # nixos-hardware's lenovo-thinkpad-x1-12th-gen module is imported at
-    # the flake.nix level, not here - it's already self-contained and
-    # pulls in its own CPU/SSD generics internally.
+    (import ./disk.nix)
+    (import ../../modules/partitions.nix {
+      disk = disk.device;
+      swapSize = "32G";
+    })
   ];
 
   networking.hostName = "riverlily";
-  time.timeZone = "REPLACE-ME";
-  i18n.defaultLocale = "en_US.UTF-8";
 
-  system.stateVersion = "24.11";
+  # CPU
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  # ---- GPU: Intel Core Ultra 155U (Meteor Lake / Xe-LPG) ----
+  # GPU
+  boot.initrd.kernelModules = [ "i915" ];
+  boot.kernelParams = [
+    "i915.enable_guc=3"
+    "i915.force_probe=7d55"
+  ];
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
     vpl-gpu-rt
     libvpl
   ];
-
   environment.sessionVariables = {
     ANV_DEBUG = "video-decode,video-encode";
   };
 
-  # ---- Laptop-specific ----
-  services.power-profiles-daemon.enable = true;
-  powerManagement.enable = true;
+  # SSD
+  services.fstrim.enable = lib.mkDefault true;
+
+  # Input
+  hardware.trackpoint.enable = lib.mkDefault true;
+  hardware.trackpoint.emulateWheel = lib.mkDefault config.hardware.trackpoint.enable;
+  hardware.trackpoint.device = "TPPS/2 Synaptics TrackPoint";
+
+  # Biometrics
+  services.fprintd.enable = true;
+
+  # Power
+  services.tlp.enable = true;
+  environment.systemPackages = with pkgs; [ tlpui ];
 }

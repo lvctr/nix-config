@@ -19,7 +19,7 @@ NixOS/Nix environment this was not written from.
 
 **Per-host facts, currently placeholders:**
 - `time.timeZone` in each `hosts/<name>/default.nix` (`"REPLACE-ME"`)
-- Disk device and swap size in each `hosts/<name>/disko.nix` (defaults to `/dev/nvme0n1` and `40G` — check `lsblk` and actual RAM size on each real machine)
+- Swap size in each `hosts/<name>/default.nix` (check actual RAM size on each real machine). `install.sh` asks for the disk device right before it runs disko and writes it to an untracked `hosts/<name>/disk.nix`.
 - `username` in `flake.nix` (currently `"you"`)
 - Monitor connector names/resolutions in `home/rainlily.nix`, `home/riverlily.nix`, `home/waterlily.nix` (check with `hyprctl monitors` after first boot)
 - `system.stateVersion` / `home.stateVersion` — set to whatever NixOS release you actually install with, then never change it afterward
@@ -33,7 +33,6 @@ Each has a fake `sha256-AAAA...` hash. Run the build once; Nix will refuse and p
 - `modules/fonts.nix` — several font package names are best-guesses, verify each with `nix search nixpkgs <name>`
 - `modules/desktop/audio.nix` — check whether `pavoldcontrol` exists in nixpkgs, or whether nixpkgs' own `pavucontrol` is still pre-6.0/GTK3 (in which case you don't need a replacement at all)
 - `home/common/gtk-theming.nix` — verify the exact filenames inside adw-colors' `adw-solarized` theme folder
-- **`install.sh`'s disko step** — `modules/partitions.nix` now bundles the LUKS/TPM2 wiring (`boot.initrd.luks.devices.*`) alongside `disko.devices` in one file, since they share magic strings that need to stay in sync. Whether the standalone `disko --mode disko <file>` CLI invocation is happy evaluating a file with both kinds of option in it together is unverified - see the comment right above that line in `install.sh` for the fallback if it isn't.
 
 ## Bootstrap, per host
 
@@ -45,25 +44,28 @@ git clone <this-repo-url> /tmp/nix-config && cd /tmp/nix-config
 
 `install.sh` runs the disko → TPM enrollment → hardware-configuration.nix
 generation → `nixos-install` sequence for you. It deliberately still stops
-for input at: the root LUKS passphrase, the swap LUKS passphrase, and the
-one-time passphrase re-entry each TPM enrollment needs to authorize itself
-— none of that belongs in a script argument or a file. It prints the
+for input at: the target disk device, the root LUKS passphrase, the swap
+LUKS passphrase, and the one-time passphrase re-entry each TPM enrollment
+needs to authorize itself. The chosen disk is written to an untracked
+`hosts/<hostname>/disk.nix`; the secrets still never belong in a
+script argument or a file. It prints the
 remaining one-time post-install steps (user password, fscrypt, restic,
 Qt colour scheme) at the end.
 
 If you'd rather run the steps by hand instead of trusting the script, they're:
 
 1. `export NIX_CONFIG="experimental-features = nix-command flakes"`
-2. `sudo nix run github:nix-community/disko -- --mode disko ./hosts/<hostname>/disko.nix`
-3. `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/root`
+2. `lsblk`, then write `hosts/<hostname>/disk.nix` with the real disk device
+3. `sudo env NIX_CONFIG="$NIX_CONFIG" nix run github:nix-community/disko -- --mode disko --flake .#<hostname>`
+4. `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs= /dev/disk/by-partlabel/root`
    and the same for `/dev/disk/by-partlabel/swap`
-4. `sudo nixos-generate-config --no-filesystems --root /mnt` then copy the
+5. `sudo nixos-generate-config --no-filesystems --root /mnt` then copy the
    result into `hosts/<hostname>/hardware-configuration.nix`
-5. `sudo nixos-install --root /mnt --flake .#<hostname>`
-6. Reboot, remove install media. Limine boots, TPM unlocks silently. You
+6. `sudo nixos-install --root /mnt --flake .#<hostname>`
+7. Reboot, remove install media. Limine boots, TPM unlocks silently. You
    land at a TTY — no display manager, on purpose. Log in, run
    `start-hyprland` yourself.
-7. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
+8. One-time, after first login: fscrypt setup (`modules/hardening.nix`),
    restic repo/password files (`modules/backup.nix`), Qt colour scheme
    application (`modules/desktop/theming.nix`) — each has the exact
    commands in a comment at its own module.

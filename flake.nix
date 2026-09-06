@@ -9,11 +9,9 @@
 
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, disko, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       overlays = [ (import ./overlays) ];
@@ -36,6 +34,8 @@
             # Shared modules. Nothing hardware-specific is allowed to live
             # in any of these - see hosts/<name>/ for that.
             ./modules/boot.nix
+            ./modules/system.nix
+            ./modules/locale.nix
             ./modules/networking.nix
             ./modules/users.nix
             ./modules/shell.nix
@@ -66,19 +66,14 @@
       nixosConfigurations = {
         rainlily = mkHost {
           hostname = "rainlily";
-          # No nixos-hardware import here on purpose - for a custom-built
-          # desktop the generic component modules amounted to a handful of
-          # lines we inlined directly in hosts/rainlily/default.nix instead.
         };
 
         riverlily = mkHost {
           hostname = "riverlily";
-          extraModules = [ nixos-hardware.nixosModules.lenovo-thinkpad-x1-12th-gen ];
         };
 
         waterlily = mkHost {
           hostname = "waterlily";
-          extraModules = [ nixos-hardware.nixosModules.lenovo-thinkpad-t480s ];
         };
       };
     };

@@ -6,7 +6,7 @@
 # place to change either side.
 #
 # `disk` and `swapSize` are the only two things that actually vary by
-# machine - each host's own partitions.nix is just those two values.
+# machine. Hosts import this module from their default.nix files.
 { disk, swapSize }:
 {
   disko.devices = {

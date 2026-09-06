@@ -1,34 +1,41 @@
-{ config, lib, pkgs, ... }:
+{ config, disk, pkgs, ... }:
 {
   imports = [
-    ./disko.nix
     ./hardware-configuration.nix
+    (import ./disk.nix)
+    (import ../../modules/partitions.nix {
+      disk = disk.device;
+      swapSize = "40G";
+    })
   ];
 
   networking.hostName = "rainlily";
-  time.timeZone = "REPLACE-ME"; # e.g. "Asia/Tokyo"
-  i18n.defaultLocale = "en_US.UTF-8";
 
-  system.stateVersion = "24.11"; # set to whatever release you actually install with, then never change it
+  nixpkgs.config.allowUnfree = true;
 
-  # ---- CPU: 7950X3D ----
+  # CPU
   hardware.cpu.amd.updateMicrocode = true;
-
   boot.extraModulePackages = [ config.boot.kernelPackages.zenpower ];
   boot.blacklistedKernelModules = [ "k10temp" ];
   boot.kernelModules = [ "zenpower" ];
 
-  # ---- GPUs: AMD iGPU (video engine use) + NVIDIA 4080 (sole display GPU) ----
+  # GPU
   hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
   hardware.graphics.extraPackages = with pkgs; [ vulkan-radeon ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
-    open = true; # Ada Lovelace - open kernel module is supported/recommended
+    open = true;
     modesetting.enable = true;
   };
-  boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
-  # ---- Misc ----
+  # SSD
   services.fstrim.enable = true;
+
+  # Kernel Params
+  boot.kernelParams = [
+    "amd_pstate=active"
+    "nvidia-drm.modeset=1"
+  ];
 }

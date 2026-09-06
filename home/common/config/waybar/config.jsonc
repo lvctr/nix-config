@@ -2,8 +2,7 @@
 [
 {
     // Bar 1 Metadata
-    "layer": "bottom",
-    "output": "__OUTPUT__",
+    "layer": "top",
     "position": "top",
     "height": 32,
     "spacing": 8,
@@ -105,8 +104,7 @@
 
 {
     // Bar 2 Metadata
-    "layer": "bottom",
-    "output": "__OUTPUT__",
+    "layer": "top",
     "position": "bottom",
     "height": 32,
     "spacing": 8,

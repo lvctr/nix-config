@@ -4,7 +4,7 @@
     # Web
     librewolf
     firefox
-    spotify-launcher
+    spotify
     # vesktop, ungoogled-chromium, spicetify-cli: AUR-only on Arch. Check
     # nixpkgs first (some, like vesktop, are packaged); anything missing
     # needs a pkgs/ derivation the same way as the theming packages.
@@ -25,9 +25,9 @@
     # IME - Japanese + English typing only, Bengali is read-only (fonts
     # only, no IME configured for it)
     fcitx5
-    fcitx5-configtool
+    qt6Packages.fcitx5-configtool
     fcitx5-gtk
-    fcitx5-qt
+    qt6Packages.fcitx5-qt
   ];
 
   i18n.inputMethod = {

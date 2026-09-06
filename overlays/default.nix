@@ -4,4 +4,5 @@ final: prev: {
   yamis-icon-theme = final.callPackage ../pkgs/yamis-icon-theme.nix { };
   kde-plasma-solarized = final.callPackage ../pkgs/kde-plasma-solarized.nix { };
   adw-colors = final.callPackage ../pkgs/adw-colors.nix { };
+  tlpui = final.callPackage ../pkgs/tlpui.nix { };
 }

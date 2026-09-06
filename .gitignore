@@ -6,7 +6,3 @@ result-*
 .direnv
 
 # Ignore NixOS interactive test driver history
-**/.nixos-test-history
-
-# Ignore per-host install-time disk selections
-hosts/*/disk.nix

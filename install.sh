@@ -29,6 +29,7 @@ if [[ ! -d "hosts/$HOSTNAME" ]]; then
 fi
 
 export NIX_CONFIG="experimental-features = nix-command flakes"
+FLAKE_REF="path:$PWD#$HOSTNAME"
 
 echo "==> Available block devices"
 lsblk
@@ -51,7 +52,7 @@ EOF
 echo "==> Partitioning + formatting $DISKO_DEVICE for $HOSTNAME"
 echo "    (you'll be prompted for the root LUKS passphrase, then the swap one)"
 sudo env NIX_CONFIG="$NIX_CONFIG" \
-  nix run github:nix-community/disko -- --mode disko --flake ".#$HOSTNAME"
+  nix run github:nix-community/disko -- --mode disko --flake "$FLAKE_REF"
 
 echo
 echo "==> Enrolling TPM2 (no PCR binding) on both LUKS devices"
@@ -67,7 +68,7 @@ cp /mnt/etc/nixos/hardware-configuration.nix "hosts/$HOSTNAME/hardware-configura
 
 echo
 echo "==> Installing NixOS for #$HOSTNAME"
-sudo nixos-install --root /mnt --flake ".#$HOSTNAME"
+sudo nixos-install --root /mnt --flake "$FLAKE_REF"
 
 cat <<EOF
 

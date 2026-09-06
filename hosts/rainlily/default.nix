@@ -11,8 +11,6 @@
 
   networking.hostName = "rainlily";
 
-  nixpkgs.config.allowUnfree = true;
-
   # CPU
   hardware.cpu.amd.updateMicrocode = true;
   boot.extraModulePackages = [ config.boot.kernelPackages.zenpower ];
@@ -22,7 +20,6 @@
   # GPU
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
-  hardware.graphics.extraPackages = with pkgs; [ vulkan-radeon ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {

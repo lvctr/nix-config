@@ -3,7 +3,7 @@
 {
   programs.zsh = {
     enable = true;
-    initExtra = ''
+    initContent = ''
       source ${pkgs.zinit}/share/zinit/zinit.zsh
 
       # ---- your zinit plugin list goes here, e.g.: ----

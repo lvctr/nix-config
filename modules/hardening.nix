@@ -4,7 +4,7 @@
 { pkgs, ... }:
 {
   # ---- fscrypt: per-user home-directory encryption on top of LUKS ----
-  environment.systemPackages = [ pkgs.fscrypt ];
+  environment.systemPackages = [ pkgs.fscrypt-experimental ];
 
   # Registers pam_fscrypt.so in the login/passwd PAM stacks, so a user's
   # /home directory unlocks on login and locks on logout using their

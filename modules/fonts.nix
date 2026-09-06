@@ -1,10 +1,5 @@
 { pkgs, ... }:
 {
-  # NOTE: nixpkgs font package names shift more than most (splits,
-  # renames, the whole nerd-fonts restructuring). Verify every name below
-  # with `nix search nixpkgs <name>` against your actual nixpkgs revision
-  # before first build - several are my best-current-guess, not verified
-  # against nixpkgs directly in this session.
   fonts.packages = with pkgs; [
     # Latin
     noto-fonts
@@ -12,19 +7,17 @@
 
     # Monospace
     (pkgs.nerd-fonts.fira-code or pkgs.nerdfonts) # adjust to current nerd-fonts packaging in your nixpkgs revision
-    otf-source-han-code-jp
+    source-han-code-jp
 
     # Japanese
     source-han-sans
     source-han-serif
     noto-fonts-cjk-sans
     ipaexfont
-    ttf-jigmo
-    # sazanami / vlgothic / monapo: check current nixpkgs names, these move around
-    vlgothic-fonts
+    jigmo
 
     # Bengali (reading only, no IME configured for it)
-    freebanglafont
+    lohit-fonts.bengali
 
     # Emoji - only this one, no others
     twemoji-color-font

@@ -1,10 +1,13 @@
 { stdenvNoCC, fetchurl }:
+let
+  rev = "43590e625ab1b07f6a5809287ce16f7e61d9e165";
+in
 stdenvNoCC.mkDerivation {
   pname = "ttf-google-sans";
-  version = "1-4";
+  version = "unstable-2026-09-06";
 
   src = fetchurl {
-    url = "https://flutter.googlesource.com/gallery-assets/+archive/refs/heads/master/lib/fonts.tar.gz";
+    url = "https://flutter.googlesource.com/gallery-assets/+archive/${rev}/lib/fonts.tar.gz";
     hash = "sha256-7uttbYqcMHcZ92kBHhOKZ1wDmaByZT7Ngfv0eTpBC84=";
   };
 

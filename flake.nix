@@ -16,10 +16,7 @@
       system = "x86_64-linux";
       overlays = [ (import ./overlays) ];
 
-      # NOTE: "you" is a placeholder username used throughout this repo
-      # (modules/users.nix, home/*.nix). Replace every occurrence before
-      # first install.
-      username = "you";
+      username = "aru";
 
       mkHost = { hostname, extraModules ? [ ] }:
         nixpkgs.lib.nixosSystem {

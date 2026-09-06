@@ -5,7 +5,7 @@ stdenvNoCC.mkDerivation {
 
   src = fetchurl {
     url = "https://flutter.googlesource.com/gallery-assets/+archive/refs/heads/master/lib/fonts.tar.gz";
-    hash = "sha256-cvlStwtivGvc+9oHw9/BmfGiNqi4xDqLRsmVYP9Yixw=";
+    hash = "sha256-7uttbYqcMHcZ92kBHhOKZ1wDmaByZT7Ngfv0eTpBC84=";
   };
 
   sourceRoot = ".";

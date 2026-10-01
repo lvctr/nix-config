@@ -31,6 +31,5 @@
   services.fprintd.enable = true;
 
   # Power
-  services.tlp.enable = true;
-  environment.systemPackages = with pkgs; [ tlpui ];
+  services.power-profiles-daemon.enable = true;
 }

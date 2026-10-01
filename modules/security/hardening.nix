@@ -25,5 +25,20 @@
   # and the user has logged in at least once (so PAM has a password to
   # bind the protector to).
 
-  # ---- future additions go here: AppArmor, hardened_malloc, sysctl, etc. ----
+  boot.kernel.sysctl = {
+    # Enable kernel-level SYN flood mitigation.
+    "net.ipv4.tcp_syncookies" = 1;
+
+    # ICMP redirects are not useful on normal end-user hosts.
+    "net.ipv4.conf.all.accept_redirects" = 0;
+    "net.ipv4.conf.default.accept_redirects" = 0;
+    "net.ipv4.conf.all.secure_redirects" = 0;
+    "net.ipv4.conf.default.secure_redirects" = 0;
+    "net.ipv6.conf.all.accept_redirects" = 0;
+    "net.ipv6.conf.default.accept_redirects" = 0;
+
+    # Do not advertise this host as a better path for third-party traffic.
+    "net.ipv4.conf.all.send_redirects" = 0;
+    "net.ipv4.conf.default.send_redirects" = 0;
+  };
 }

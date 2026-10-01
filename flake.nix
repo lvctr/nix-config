@@ -46,6 +46,7 @@
             ./modules/desktop/gaming.nix
             ./modules/security/hardening.nix
             ./modules/services/backup.nix
+            ./modules/services/virtualisation.nix
 
             # This host's own hardware facts: disk layout, LUKS/TPM2 wiring,
             # CPU/GPU packages, hostname, timezone.
